@@ -23,26 +23,29 @@ export default class UsersController {
    * @param httpContract
    * @returns {Promise<void>}
    */
-  public async create({ request, response }: HttpContextContract): Promise<void> {
+  public async store({ request, response }: HttpContextContract): Promise<void> {
     let data = await request.validate({ schema: UserValidation })
-    let newUser = User.create(data)
+    let user = await User.create(data)
 
-    return response.created(newUser)
+    return response.created(user)
   }
 
-  public async update({ request, response }: HttpContextContract) {
-    let data = await request.validate({ schema: UserValidation })
+  public async update({ request, response }: HttpContextContract): Promise<void> {
+    let newUpdate = await request.validate({ schema: UserValidation })
+    let user = await User.findOrFail(request.params().id)
 
-    let user = await User.findOrFail(request.params.id)
-
-    user.merge(data)
+    user.merge(newUpdate)
     await user.save()
 
-    return response.created({ user })
+    if (user.$isNew) return response.created(user)
+
+    return response.accepted(user)
   }
 
-  public async destroy({ response, auth }: HttpContextContract) {
-    await auth.user.delete()
+  public async destroy({ response, request }: HttpContextContract) {
+    let user = await User.findOrFail(request.params().id)
+
+    user.delete()
 
     return response.noContent()
   }

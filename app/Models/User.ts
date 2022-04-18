@@ -15,7 +15,7 @@ export default class User extends BaseModel {
   public birth_day: DateTime
 
   @column()
-  public birth_place: string
+  public birth_timezone: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -1,0 +1,35 @@
+/user:
+  get:
+    description: Get user info
+    responses:
+      200:
+        description: User info
+  post:
+    description: Create new user
+    parameters:
+      - name: credentials
+        in: body
+        required: true
+        schema:
+          properties:
+            first_name:
+              type: string
+              example: 'Derrick'
+              required: true
+            last_name:
+              type: string
+              example: 'Hanson'
+              required: true
+            birth_date:
+              type: string
+              example: '1990-01-01'
+              required: true
+            birth_place:
+              type: string
+              example: 'Australia/Sydney'
+              required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success
